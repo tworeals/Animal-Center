@@ -1,11 +1,16 @@
 {
   "expo": {
     "name": "AnimalCenter",
-    "slug": "AnimalCenter",
+    "slug": "animalcenter",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/paw.png",
     "userInterfaceStyle": "light",
+    "extra": {
+      "eas": {
+        "projectId": "e4425458-5aba-47e1-9e39-2acfd100c44e"
+      }
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,17 +22,29 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "packagerOpts": {
+      "port": 53833
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tworeals.animalcenter",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/paw.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.tworeals.animalcenter",
+      "versionCode": 2,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/paw.png"
+    },
+    "description": "Tworeal's sideproject"
   }
 }
