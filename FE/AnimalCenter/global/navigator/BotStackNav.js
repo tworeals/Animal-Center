@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import FireFlat from "../../pages/FireFlat";
-import TestPage from "../../pages/testPages";
-import HomePage from "../../pages/HomeFlat";
+
+import FireFlat from "../../pages/testPages/FireFlat";
+import TestPage from "../../pages/testPages/TestPage";
+import HomePage from "../../pages/testPages/HomeFlat";
 
 // TabStack은 TabBar를 만드는 네비게이션옵션을 선언해준거다.
 // webviewStack은 webview를 StackNavigation해주기 위해 선언해준거다.
@@ -17,8 +19,8 @@ const FBStackScreen = () => {
     return (
         <FBStack.Navigator>
             <FBStack.Screen
-                name="about"
-                component={TestPage}
+                name="Firebase"
+                component={FireFlat}
                 options={{ headerShown: false }}
             />
         </FBStack.Navigator>
@@ -29,8 +31,8 @@ const HomeStackScreen = () => {
     return (
         <FBStack.Navigator>
             <FBStack.Screen
-                name="about"
-                component={TestPage}
+                name="Home"
+                component={HomePage}
                 options={{ headerShown: false }}
             />
         </FBStack.Navigator>
@@ -45,8 +47,8 @@ const HomeStackScreen = () => {
 const TabStackScreen = () => {
     return (
         <TabStack.Navigator screenOptions={{ tabBarActiveTintColor: '#eb4b4b', headerShown: false }} backBehavior="history" initialRouteName="홈" sceneContainerStyle={{ marginTop: 30 }}>
-            <TabStack.Screen name="홈" component={HomeStackScreen} options={{ tabBarLabel: 'Home', tabBarIcon: ({ color, size }) => (<MaterialCommunityIcons name="home" color={color} size={size} />), }} />
-            <TabStack.Screen name="파이어베이스" component={FBStackScreen} options={{ tabBarLabel: 'Firebase', tabBarIcon: ({ color, size }) => (<MaterialCommunityIcons name="cloud" color={color} size={size} />), }} />
+            <TabStack.Screen name="홈" component={HomeStackScreen} options={{ tabBarLabel: 'Home', tabBarIcon: ({ color, size }) => (<MaterialCommunityIcons name="home" color={color} size={size} />) }} />
+            <TabStack.Screen name="파이어베이스" component={FBStackScreen} options={{ tabBarLabel: 'Firebase', tabBarIcon: ({ color, size }) => (<MaterialCommunityIcons name="cloud" color={color} size={size} />) }} />
         </TabStack.Navigator>
     );
 };
