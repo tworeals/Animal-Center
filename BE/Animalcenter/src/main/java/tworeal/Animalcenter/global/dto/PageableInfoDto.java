@@ -14,18 +14,16 @@ public class PageableInfoDto<T> {
 
     private List<T> data;  // 감싸는 리스트 이름
 
-    private int size;
+    private PageInfo pageInfo;
 
-    private int totalPages;
-
-    private long totalElements;
-
-    private boolean first;  // 첫 페이지인지
-
-    private boolean last;   // 마지막 페이지인지
-
-    private boolean sorted; // 정렬 조건이 있는지
-
-    private int pageNumber;
-
+    public PageableInfoDto(Page<T> page) {
+        data = page.getContent();  // 조회할 데이터
+        PageInfo pageableInfo = PageInfo.builder()
+                .page(page.getPageable().getPageNumber())  // 페이지 번호 확인
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .build();
+        pageInfo = pageableInfo;
+    }
 }

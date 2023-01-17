@@ -11,6 +11,9 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
+/**
+ * abstract class를 사용할지 고민 후 결정 (현재는 BaseTimeEntity로 사용하기)
+ */
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -23,7 +26,10 @@ public abstract class Auditable {
     @Column(name = "LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @CreatedBy
-    @Column(updatable = false)
-    private String createdBy;
+    /**
+     * 생성한 사람은 필요시 추가
+     */
+//    @CreatedBy
+//    @Column(updatable = false)
+//    private String createdBy;
 }
