@@ -1,16 +1,19 @@
 package tworeal.Animalcenter.domain.article.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import tworeal.Animalcenter.global.dto.PageableInfoDto;
+import org.springframework.web.bind.annotation.*;
+import tworeal.Animalcenter.global.dto.PageInfoDto;
 import tworeal.Animalcenter.global.dto.SingleResDto;
 
-@RestController("/article")
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/article")
 public class ArticleController {
 
     /**
@@ -54,10 +57,14 @@ public class ArticleController {
      *
      * @return 객체 ResponseDto를 Pageable로 감싸서 반환
      */
-    @GetMapping
-    public ResponseEntity<PageableInfoDto> getArticles() {
-
+    @GetMapping("/all")
+    public ResponseEntity<Page> getArticles(Pageable pageable) {
+        List<String> mockList = new ArrayList<>();
+        int count = 0;
+        while(count++<10) mockList.add("Mock"+count);
+        Page<String> page = new PageImpl(mockList, pageable, mockList.size());
+//        Page<String> dtoPage = page.map(String::new);
 //        Page<ArticleResDto> dtoPage = page.map(ArticleResDto::new);
-        return new ResponseEntity<>(new PageableInfoDto<>(), HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 }

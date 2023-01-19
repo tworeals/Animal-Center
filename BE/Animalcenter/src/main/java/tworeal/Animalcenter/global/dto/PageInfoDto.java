@@ -10,13 +10,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageableInfoDto<T> {
+public class PageInfoDto<T> {
 
     private List<T> data;  // 감싸는 리스트 이름
 
     private PageInfo pageInfo;
 
-    public PageableInfoDto(Page<T> page) {
+    public PageInfoDto(Page<T> page) {
         data = page.getContent();  // 조회할 데이터
         PageInfo pageableInfo = PageInfo.builder()
                 .page(page.getPageable().getPageNumber())  // 페이지 번호 확인
