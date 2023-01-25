@@ -2,7 +2,7 @@ package tworeal.Animalcenter.domain.account.entity;
 
 import lombok.Getter;
 
-public enum UserState {
+public enum UserStatus {
     /**
      * 계정 상태값
      */
@@ -10,10 +10,7 @@ public enum UserState {
     ACCOUNT_SLEEP("휴면 계정"),
     ACCOUNT_QUIT("탈퇴 계정");
 
-    /**
-     * 외부로 내보낼 Data 추가하는 필드값
-     * 불변 밸류
-     */
+
     @Getter
     private String status;
 
@@ -22,7 +19,7 @@ public enum UserState {
      * 파라미터 + 필드 추가를 할 수 있다
       * @param status
      */
-    UserState(String status) {
+    UserStatus(String status) {
         this.status = status;
     }
 }

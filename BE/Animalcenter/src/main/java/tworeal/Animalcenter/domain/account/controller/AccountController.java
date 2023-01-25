@@ -1,70 +1,105 @@
 package tworeal.Animalcenter.domain.account.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tworeal.Animalcenter.domain.account.dto.AccountPatchReqDto;
+import tworeal.Animalcenter.domain.account.dto.AccountPostReqDto;
+import tworeal.Animalcenter.domain.account.dto.AccountResDto;
+import tworeal.Animalcenter.domain.account.entity.Account;
+import tworeal.Animalcenter.domain.account.service.AccountService;
+import tworeal.Animalcenter.global.dto.PageInfoDto;
 import tworeal.Animalcenter.global.dto.SingleResDto;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/account")
 public class AccountController {
 
+    private final AccountService accountService;
+
     /**
-     * Mock Post
-     * @return 200
+     * Post 요청
+     * @return "data" : "String"
      */
     @PostMapping
-    public ResponseEntity<SingleResDto<String>> postAccount() {
+    public ResponseEntity<SingleResDto<Long>> postAccount (@RequestBody AccountPostReqDto accountPostReqDto) {
+        Account savedAccount = accountService.createAccount(accountPostReqDto.toEntity());
 
-        return new ResponseEntity<>(new SingleResDto<>("Post Success"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new SingleResDto<>(savedAccount.getAccountId()), HttpStatus.CREATED);
     }
 
 
     /**
-     * Mock Patch
-     * @return 200
+     * Patch 요청
+     * @return "data" : "String"
+     * @param accountPatchReqDto : 요청 Body
+     * @param accountId : 시큐리티 구성 전 임시 Variable
+     * @return void
      */
-    @PatchMapping("/edit")
-    public ResponseEntity<SingleResDto<String>> patchAccount() {
-
-        return new ResponseEntity<>(new SingleResDto<>("Patch Success"), HttpStatus.OK);
+    @PatchMapping("/edit/{account_id}")
+    public ResponseEntity<SingleResDto<String>> patchAccount (@RequestBody AccountPatchReqDto accountPatchReqDto,
+                                                             @PathVariable("account_id") Long accountId) {
+        accountService.modifyMember(accountPatchReqDto.toEntity(), accountId);
+        return new ResponseEntity<>(new SingleResDto<>("Success Patch"), HttpStatus.OK);
     }
+
 
     /**
-     * Mock Delete (상태패턴 사용을 위해 실제로는 Patch로 할 것임
-     * @return 200 OK로 변경하기
+     * Delete 요청
+     * 애너테이션은 delete 요청을 받을 것이므로, DeleteMapping으로 받음
+     * 상태변환을 할 예정이므로, HttpStatus는 NO_CONTENT가 아닌 OK로 함
+     * 회원탈퇴(withdraw) 후 성공 메세지 반환
+     * @return "data" : "성공 메세지"
      */
-    @PatchMapping("/remove")
-    public ResponseEntity<SingleResDto<String>> deleteAccount() {
-        // 상태변환 필요
-        return new ResponseEntity<>(new SingleResDto<>("Delete Success"), HttpStatus.OK);
+    @DeleteMapping("/remove/{account_id}")
+    public ResponseEntity<SingleResDto<String>> withdrawAccount (@PathVariable("account_id") Long accountId) {
+        accountService.withdrawAccount(accountId);
+
+        return new ResponseEntity<>(new SingleResDto<>("Success Withdraw"), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<SingleResDto<String>> getAccount() {
-
-        return new ResponseEntity<>(new SingleResDto<>("Get Success"), HttpStatus.OK);
-    }
 
     /**
-     *
-     * @return 객체 ResponseDto를 Pageable로 감싸서 반환
+     * 회원 삭제 메소드
+     * @return 삭제 성공 메세지
      */
-    @GetMapping("/all")
-    public ResponseEntity<Page> getAccounts(Pageable pageable) {
-        List<String> mockList = new ArrayList<>();
-        int count = 0;
-        while(count++<10) mockList.add("Mock"+count);
-        Page<String> page = new PageImpl(mockList, pageable, mockList.size());
-//        Page<String> dtoPage = page.map(String::new);
-//        Page<ArticleResDto> dtoPage = page.map(ArticleResDto::new);
-        return new ResponseEntity<>(page, HttpStatus.OK);
+    @DeleteMapping("/delete/{account_id}")
+    public ResponseEntity<SingleResDto<String>> deleteAccount (@PathVariable("account_id") Long accountId) {
+        accountService.removeAccount(accountId);
+
+        return new ResponseEntity<>(new SingleResDto<>("Success Delete"), HttpStatus.OK);
     }
+
+
+
+    /**
+     * 단일 Get 요청
+     * @return "data" : "단일 객체에 대한 응답정보"
+     */
+    @GetMapping("/find/{account_id}")
+    public ResponseEntity<SingleResDto<AccountResDto>> getAccount (@PathVariable("account_id") Long accountId) {
+        Account account = accountService.findAccount(accountId);
+        AccountResDto response = new AccountResDto(account);
+
+        return new ResponseEntity<>(new SingleResDto<>(response), HttpStatus.OK);
+    }
+
+
+    /**
+     * Page Get 요청
+     * @return "data" : "String"
+     */
+    @GetMapping("/find-all")
+    public ResponseEntity<PageInfoDto<AccountResDto>> getMembers (Pageable pageable) {
+        Page<Account> page = accountService.findAccounts(pageable);
+        Page<AccountResDto> response = page.map(AccountResDto::new);
+
+        return new ResponseEntity<>(new PageInfoDto<>(response), HttpStatus.OK);
+    }
+
 
 }
